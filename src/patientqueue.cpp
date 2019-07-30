@@ -52,8 +52,7 @@ bool PatientQueue::isEmpty() const {
 }
 
 string PatientQueue::peek() const {
-    // TODO: write this function
-    return "";   // remove this
+    return patients[1].name;
 }
 
 int PatientQueue::peekPriority() const {
