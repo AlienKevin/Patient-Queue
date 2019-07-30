@@ -2,9 +2,7 @@
 #include "patientqueue.h"
 
 PatientQueue::PatientQueue(bool isMinHeap) {
-    patientsCapacity = 10;
-    patientsSize = 0;
-    patients = new Patient[patientsCapacity];
+    clear();
 }
 
 PatientQueue::~PatientQueue() {
@@ -29,8 +27,9 @@ void PatientQueue::changePriority(string value, int newPriority) {
 }
 
 void PatientQueue::clear() {
-    // TODO: write this function
-
+    patientsCapacity = 10;
+    patientsSize = 0;
+    patients = new Patient[patientsCapacity];
 }
 
 void PatientQueue::debug() {
