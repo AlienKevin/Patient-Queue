@@ -56,8 +56,7 @@ string PatientQueue::peek() const {
 }
 
 int PatientQueue::peekPriority() const {
-    // TODO: write this function
-    return 0;   // remove this
+    return patients[1].priority;
 }
 
 int PatientQueue::size() const {
