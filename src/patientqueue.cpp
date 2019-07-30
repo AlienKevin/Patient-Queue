@@ -62,8 +62,7 @@ int PatientQueue::peekPriority() const {
 }
 
 int PatientQueue::size() const {
-    // TODO: write this function
-    return 0;   // remove this
+    return patientsSize;
 }
 
 // {Anat (4), Rein (6), Sasha (8),	Ben (9), Wu (7), Eve (10)}
