@@ -6,8 +6,7 @@ PatientQueue::PatientQueue(bool isMinHeap) {
 }
 
 PatientQueue::~PatientQueue() {
-    // TODO: write this destructor
-
+    delete[] patients;
 }
 
 void PatientQueue::changePriority(string value, int newPriority) {
