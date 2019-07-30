@@ -47,8 +47,7 @@ void PatientQueue::enqueue(string value, int priority) {
 }
 
 bool PatientQueue::isEmpty() const {
-    // TODO: write this function
-    return false;   // remove this
+    return patientsSize == 0;
 }
 
 string PatientQueue::peek() const {
