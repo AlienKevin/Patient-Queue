@@ -28,6 +28,7 @@ private:
     int patientsSize;
     int patientsCapacity;
     bool isMinHeap;
+    void swap(int &parentPos, int childPos);
 };
 
 #endif
