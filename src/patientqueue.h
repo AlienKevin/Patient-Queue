@@ -29,6 +29,8 @@ private:
     int patientsCapacity;
     bool isMinHeap;
     void swap(int &parentPos, int childPos);
+    void bubbleUp(int currentPos);
+    void bubbleDown(int currentPos);
 };
 
 #endif

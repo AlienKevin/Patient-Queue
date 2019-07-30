@@ -13,8 +13,19 @@ PatientQueue::~PatientQueue() {
 }
 
 void PatientQueue::changePriority(string value, int newPriority) {
-    // TODO: write this function
-
+    for (int i = 1; i < patientsSize + 1; i ++) {
+        Patient patient = patients[i];
+        if (patient.name == value) { // first occurance of name
+            // change priority
+            patients[i].priority = newPriority;
+            // bubble down or up
+            int currentPos = i;
+            bubbleDown(currentPos);
+            bubbleUp(currentPos);
+            return;
+        }
+    }
+    throw "Patient " + value + " is not found in the patients queue!";
 }
 
 void PatientQueue::clear() {
@@ -25,6 +36,44 @@ void PatientQueue::clear() {
 void PatientQueue::debug() {
 }
 
+void PatientQueue::bubbleDown(int currentPos) {
+    int parentPos = currentPos / 2;
+    while (parentPos >= 1 && patients[currentPos].priority < patients[parentPos].priority) {
+        swap(currentPos, parentPos);
+    }
+}
+
+void PatientQueue::bubbleUp(int currentPos) {
+    while ((currentPos * 2 <= patientsSize &&
+           patients[currentPos].priority > patients[currentPos * 2].priority) ||
+           (currentPos * 2 + 1 <= patientsSize &&
+           patients[currentPos].priority > patients[currentPos * 2 + 1].priority)) {
+        int firstChildPos = currentPos * 2;
+        int secondChildPos = currentPos * 2 + 1;
+        if (secondChildPos <= patientsSize) { // both children exists
+            // first child's priority value lower than second child
+            if (patients[firstChildPos].priority < patients[secondChildPos].priority) {
+                // swap parent and first child
+                swap(currentPos, firstChildPos);
+            } else if (patients[firstChildPos].priority == patients[secondChildPos].priority){
+                // first child's priority value is equal to second child
+                // Compare name alphabetically
+                if (patients[firstChildPos].name <= patients[secondChildPos].name) {
+                    swap(currentPos, firstChildPos);
+                } else {
+                    swap(currentPos, secondChildPos);
+                }
+            } else {
+                // swap parent and second child
+                swap(currentPos, secondChildPos);
+            }
+        } else if (currentPos * 2 <= patientsSize) { // only first child exists
+            // swap parent and first child
+            swap(currentPos, firstChildPos);
+        }
+    }
+}
+
 string PatientQueue::dequeue() {
     if (isEmpty()) {
         throw "Cannot dequeue an empty queue!";
@@ -33,45 +82,19 @@ string PatientQueue::dequeue() {
     Patient backPatient = patients[patientsSize];
     int newPos = 1;
     patients[newPos] = backPatient;
-    while ((newPos * 2 <= patientsSize &&
-           patients[newPos].priority > patients[newPos * 2].priority) ||
-           (newPos * 2 + 1 <= patientsSize &&
-           patients[newPos].priority > patients[newPos * 2 + 1].priority)) {
-        int firstChildPos = newPos * 2;
-        int secondChildPos = newPos * 2 + 1;
-        if (secondChildPos <= patientsSize) { // both children exists
-            // first child's priority value lower than second child
-            if (patients[firstChildPos].priority < patients[secondChildPos].priority) {
-                // swap parent and first child
-                swap(newPos, firstChildPos);
-            } else if (patients[firstChildPos].priority == patients[secondChildPos].priority){
-                // first child's priority value is equal to second child
-                // Compare name alphabetically
-                if (patients[firstChildPos].name >= patients[secondChildPos].name) {
-                    swap(newPos, firstChildPos);
-                } else {
-                    swap(newPos, secondChildPos);
-                }
-            } else {
-                // swap parent and second child
-                swap(newPos, secondChildPos);
-            }
-        } else if (newPos * 2 <= patientsSize) { // only first child exists
-            // swap parent and first child
-            swap(newPos, firstChildPos);
-        }
-    }
+    // bubble up
+    bubbleUp(newPos);
     patientsSize --;
     return frontPatient.name;
 }
 
-void PatientQueue::swap(int &parentPos, int childPos) {
-    Patient parent = patients[parentPos];
-    // swap parent position with child position
-    patients[parentPos] = patients[childPos];
-    patients[childPos] = parent;
-    // move current position to position of the child
-    parentPos = childPos;
+void PatientQueue::swap(int &pos1, int pos2) {
+    Patient pos1Patient = patients[pos1];
+    // swap pos1 position with pos2 position
+    patients[pos1] = patients[pos2];
+    patients[pos2] = pos1Patient;
+    // move pos1 to position of pos2
+    pos1 = pos2;
 }
 
 void PatientQueue::enqueue(string value, int priority) {
