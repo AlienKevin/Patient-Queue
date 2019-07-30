@@ -2,6 +2,7 @@
 #include "patientqueue.h"
 
 PatientQueue::PatientQueue(bool isMinHeap) {
+    this->isMinHeap = isMinHeap;
     clear();
 }
 
@@ -37,7 +38,7 @@ void PatientQueue::debug() {
 void PatientQueue::bubbleDown(int currentPos) {
     int parentPos = currentPos / 2;
     while (parentPos >= 1 &&
-           (patients[currentPos].priority <= patients[parentPos].priority)) {
+           hasHigherOrEqualPriority(currentPos, parentPos)) {
         if (swapDown(currentPos, parentPos) == false) {
             return; // break the while loop
         }
@@ -47,21 +48,22 @@ void PatientQueue::bubbleDown(int currentPos) {
 
 void PatientQueue::bubbleUp(int currentPos) {
     while ((currentPos * 2 <= patientsSize &&
-           patients[currentPos].priority >= patients[currentPos * 2].priority) ||
+            hasLowerOrEqualPriority(currentPos, currentPos * 2)) ||
            (currentPos * 2 + 1 <= patientsSize &&
-           patients[currentPos].priority >= patients[currentPos * 2 + 1].priority)) {
+            hasLowerOrEqualPriority(currentPos, currentPos * 2 + 1))) {
         int firstChildPos = currentPos * 2;
         int secondChildPos = currentPos * 2 + 1;
         bool hasSwapSucceeded = false;
         if (secondChildPos <= patientsSize) { // both children exists
             // first child's priority value lower than second child
-            if (patients[firstChildPos].priority < patients[secondChildPos].priority) {
+            if (hasHigherPriority(firstChildPos, secondChildPos)) {
                 // swap parent and first child
                 hasSwapSucceeded = swapUp(currentPos, firstChildPos);
             } else if (patients[firstChildPos].priority == patients[secondChildPos].priority){
                 // first child's priority value is equal to second child
                 // Compare name alphabetically
-                if (patients[firstChildPos].name <= patients[secondChildPos].name) {
+                if ((isMinHeap && patients[firstChildPos].name <= patients[secondChildPos].name) ||
+                    (!isMinHeap && patients[firstChildPos].name > patients[secondChildPos].name)) {
                     hasSwapSucceeded = swapUp(currentPos, firstChildPos);
                 } else {
                     hasSwapSucceeded = swapUp(currentPos, secondChildPos);
@@ -94,6 +96,38 @@ string PatientQueue::dequeue() {
     return frontPatient.name;
 }
 
+bool PatientQueue::hasHigherPriority(int pos1, int pos2) {
+    if (isMinHeap) {
+        return patients[pos1].priority < patients[pos2].priority ||
+                (patients[pos1].priority == patients[pos2].priority &&
+                patients[pos1].name < patients[pos2].name);
+    } else {
+        return patients[pos1].priority > patients[pos2].priority ||
+                (patients[pos1].priority == patients[pos2].priority &&
+                patients[pos1].name > patients[pos2].name);
+    }
+}
+
+bool PatientQueue::hasHigherOrEqualPriority(int pos1, int pos2) {
+    return !hasLowerPriority(pos1, pos2);
+}
+
+bool PatientQueue::hasLowerPriority(int pos1, int pos2) {
+    if (isMinHeap) {
+        return patients[pos1].priority > patients[pos2].priority ||
+                (patients[pos1].priority == patients[pos2].priority &&
+                patients[pos1].name > patients[pos2].name);
+    } else {
+        return patients[pos1].priority < patients[pos2].priority ||
+                (patients[pos1].priority == patients[pos2].priority &&
+                patients[pos1].name < patients[pos2].name);
+    }
+}
+
+bool PatientQueue::hasLowerOrEqualPriority(int pos1, int pos2) {
+    return !hasHigherPriority(pos1, pos2);
+}
+
 void PatientQueue::swap(int &pos1, int pos2) {
     Patient pos1Patient = patients[pos1];
     // swap pos1 position with pos2 position
@@ -105,9 +139,7 @@ void PatientQueue::swap(int &pos1, int pos2) {
 
 // swap current position (pos1) with parent (pos2)
 bool PatientQueue::swapDown(int &currentPos, int parentPos) {
-    if (patients[currentPos].priority < patients[parentPos].priority ||
-            (patients[currentPos].priority == patients[parentPos].priority &&
-            patients[currentPos].name < patients[parentPos].name)) {
+    if (hasHigherPriority(currentPos, parentPos)) {
         swap(currentPos, parentPos);
         return true;
     }

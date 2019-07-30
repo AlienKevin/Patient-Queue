@@ -28,6 +28,10 @@ private:
     int patientsSize;
     int patientsCapacity;
     bool isMinHeap;
+    bool hasHigherPriority(int pos1, int pos2);
+    bool hasHigherOrEqualPriority(int pos1, int pos2);
+    bool hasLowerPriority(int pos1, int pos2);
+    bool hasLowerOrEqualPriority(int pos1, int pos2);
     void swap(int &parentPos, int childPos);
     bool swapDown(int &currentPos, int parentPos);
     bool swapUp(int &currentPos, int childPos);
