@@ -151,10 +151,16 @@ bool PatientQueue::isEmpty() const {
 }
 
 string PatientQueue::peek() const {
+    if (isEmpty()) {
+        throw "Cannot peek at an empty queue!";
+    }
     return patients[1].name;
 }
 
 int PatientQueue::peekPriority() const {
+    if (isEmpty()) {
+        throw "Cannot peek at an empty queue!";
+    }
     return patients[1].priority;
 }
 
