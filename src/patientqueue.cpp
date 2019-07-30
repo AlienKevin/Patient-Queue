@@ -1,5 +1,4 @@
 // This is the CPP file you will edit and turn in. (TODO: Remove this comment!)
-
 #include "patientqueue.h"
 
 PatientQueue::PatientQueue(bool isMinHeap) {
@@ -24,17 +23,27 @@ void PatientQueue::clear() {
 }
 
 void PatientQueue::debug() {
-    // empty
 }
 
 string PatientQueue::dequeue() {
-    // TODO: write this function
-    return "";   // remove this
+    return "";
 }
 
 void PatientQueue::enqueue(string value, int priority) {
-    // TODO: write this function
-
+    Patient *newPatient = new Patient(value, priority);
+    int newPos = patientsSize + 1; // 0-th index is not used
+    patients[newPos] = *newPatient;
+    while (newPos >= 2) {
+        int parentPos = newPos / 2;
+        Patient parent = patients[parentPos];
+        if (newPatient->priority < parent.priority) { // new patient has lower priority value than parent
+            // swap new patient and their parent
+            patients[newPos] = parent;
+            patients[parentPos] = *newPatient;
+        }
+        newPos /= 2;
+    }
+    patientsSize ++;
 }
 
 bool PatientQueue::isEmpty() const {
@@ -60,10 +69,10 @@ int PatientQueue::size() const {
 // {Anat (4), Rein (6), Sasha (8),	Ben (9), Wu (7), Eve (10)}
 ostream& operator <<(ostream& out, const PatientQueue& queue) {
     out << "{";
-    for (int i = 0; i < queue.patientsSize; i ++) {
+    for (int i = 1; i < queue.patientsSize + 1; i ++) {
         Patient patient = queue.patients[i];
         out << patient.name << " (" << patient.priority << ")";
-        if (i < queue.patientsSize - 1) { // before the last element
+        if (i < queue.patientsSize) { // before the last element
             out << ", ";
         }
     }
