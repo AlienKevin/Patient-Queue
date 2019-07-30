@@ -24,8 +24,10 @@ public:
     friend ostream& operator <<(ostream& out, const PatientQueue& queue);
 
 private:
-    // TODO: add specified member variables and any needed helper functions
-
+    Patient *patients;
+    int patientsSize;
+    int patientsCapacity;
+    bool isMinHeap;
 };
 
 #endif

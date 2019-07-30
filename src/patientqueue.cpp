@@ -3,8 +3,9 @@
 #include "patientqueue.h"
 
 PatientQueue::PatientQueue(bool isMinHeap) {
-    // TODO: write this constructor
-
+    patientsCapacity = 10;
+    patientsSize = 0;
+    patients = new Patient[patientsCapacity];
 }
 
 PatientQueue::~PatientQueue() {
@@ -56,8 +57,16 @@ int PatientQueue::size() const {
     return 0;   // remove this
 }
 
+// {Anat (4), Rein (6), Sasha (8),	Ben (9), Wu (7), Eve (10)}
 ostream& operator <<(ostream& out, const PatientQueue& queue) {
-    // TODO: write this function
-
+    out << "{";
+    for (int i = 0; i < queue.patientsSize; i ++) {
+        Patient patient = queue.patients[i];
+        out << patient.name << " (" << patient.priority << ")";
+        if (i < queue.patientsSize - 1) { // before the last element
+            out << ", ";
+        }
+    }
+    out << "}";
     return out;
 }
